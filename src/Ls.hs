@@ -1,6 +1,4 @@
-module Commands.Ls
-  ( ls
-  ) where
+module Ls (ls, mapLs) where
 
 import System.Directory
 
@@ -9,4 +7,5 @@ import System.Directory
 ls :: FilePath -> IO [FilePath]
 ls fp = listDirectory fp
 
-
+mapLs :: [FilePath] -> IO ()
+mapLs fs = mapM_ putStrLn fs

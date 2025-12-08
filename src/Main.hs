@@ -1,5 +1,11 @@
 module Main (main) where
 
+import Ls
+
 main :: IO ()
 main = do
-  putStrLn "hello world"
+  file <- getLine
+  files <- ls file
+  mapLs files
+
+  -- mapM_ putStrLn files
