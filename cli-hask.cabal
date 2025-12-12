@@ -2,25 +2,21 @@ cabal-version:       2.2
 
 name:                cli-hask
 version:             0.1.0.0
--- synopsis:
--- description:
+synopsis:            A command-line tool written in Haskell
+description:         CLI tool with file system utilities
 homepage:            https://github.com/githubuser/cli-hask#readme
 license:             BSD-3-Clause
 license-file:        LICENSE
 author:              Author name here
 maintainer:          example@example.com
 copyright:           2025 Author name here
-category:            Web
+category:            System
 build-type:          Simple
 extra-source-files:  README.md
                      CHANGELOG.md
 
-executable cli-hask
-  hs-source-dirs:      src
-  main-is:             Main.hs
+common shared-properties
   default-language:    Haskell2010
-  other-modules:       Ls
-  build-depends:       base >= 4.7 && < 5, directory
   ghc-options:         -Wall
                        -Wcompat
                        -Widentities
@@ -30,6 +26,38 @@ executable cli-hask
                        -Wmissing-home-modules
                        -Wpartial-fields
                        -Wredundant-constraints
+
+library
+  import:              shared-properties
+  hs-source-dirs:      src
+  exposed-modules:     Ls
+  build-depends:       base >= 4.7 && < 5
+                     , directory
+
+executable cli-hask
+  import:              shared-properties
+  hs-source-dirs:      src
+  main-is:             Main.hs
+  build-depends:       base >= 4.7 && < 5
+                     , cli-hask
+                     , directory
+  ghc-options:         -threaded
+                       -rtsopts
+                       -with-rtsopts=-N
+
+test-suite cli-hask-test
+  import:              shared-properties
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      tests
+  main-is:             Spec.hs
+  other-modules:       Test_ls
+  build-depends:       base >= 4.7 && < 5
+                     , cli-hask
+                     , hspec
+                     , QuickCheck
+  ghc-options:         -threaded
+                       -rtsopts
+                       -with-rtsopts=-N
 
 source-repository head
   type:     git
