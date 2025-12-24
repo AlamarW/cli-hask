@@ -18,11 +18,16 @@ spec = do
   describe "Commands" $ do
     describe "Ls" $ do
       it "can return a list of dirs" $ do
-        files <- ls "."
-        files `shouldSatisfy` (not . null)
+        result <- ls "."
+        case result of
+          Right files -> files `shouldSatisfy` (not . null)
+          Left err -> expectationFailure $ "Expected success but got error: " ++ show err
       context "when used with String" $ do
-        it "is not null" $ property $
+        it "returns either a valid directory list or a directory-related error" $ property $
 	  \x -> ioProperty $ do
-	    files <- ls x
-	    return (not (null files))
+	    result <- ls x
+	    return $ case result of
+	      Left (DirOtherError _ _) -> False  -- Reject non-directory errors
+	      Left _ -> True  -- Accept directory-related errors
+	      Right _files -> True  -- Success case: valid directory
 

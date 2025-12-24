@@ -5,7 +5,9 @@ import Ls
 main :: IO ()
 main = do
   file <- getLine
-  files <- ls file
-  mapLs files
+  result <- ls file
+  case result of
+    Right files -> mapLs files
+    Left err -> putStrLn $ "Error: " ++ show err
 
   -- mapM_ putStrLn files
